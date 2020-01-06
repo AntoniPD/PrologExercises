@@ -1,0 +1,32 @@
+mymember(X, [X|_]).
+mymember(X, [L|_]) :- mymember(X, L).
+mymember(X,[_|T]) :- mymember(X, T).
+
+isElementLast(X, [X]).
+isElementLast(X, [_|T]) :- isElementLast(X, T).
+
+
+twoElements(X,Y,[X,Y|_]).
+twoElements(X,Y,[_,H|T]) :- twoElements(X,Y,[H|T]).
+
+sublist( [], _ ).
+sublist( [X|XS], [X|XSS] ) :- sublist( XS, XSS ).
+sublist( [X|XS], [_|XSS] ) :- sublist( [X|XS], XSS ).
+
+subreverse(_, []).
+subreverse(L, R) :- reverse(R, R1), sublist(R1, L).
+
+
+
+reverse1(List, Reversed) :-
+          reverse1(List, [], Reversed).
+
+reverse1([], Reversed, Reversed).
+reverse1([Head|Tail], SoFar, Reversed) :-
+          reverse1(Tail, [Head|SoFar], Reversed).
+
+myreverse([], []).
+myreverse([H|T], R) :- myreverse(T, R1), myappend(R1, [H], R). 
+
+myappend([],L,L).
+myappend([H|T], L2, [H|R]) :- myappend(T, L2, R).
