@@ -1,0 +1,29 @@
+intersection([], _,[]). 
+intersection([X|R], Y,[X|Z]):-mymember(X,Y), intesection(R,Y,Z). 
+intersection([_|R], Y,Z):-intersection(R,Y,Z). 
+
+union([], X,X). 
+union([X|R], Y,Z):-mymember(X,Y), ob(R,Y,Z). 
+union([X|R], Y,[X|Z]):-union(R,Y,Z). 
+
+subset([], _). 
+subset([E|X], Y):-mymember(E,Y), subset(X,Y). 
+
+myappend([],L,L).
+myappend([H|T], L2, [H|R]) :- myappend(T, L2, R).
+
+mymember(X, [X|_]).
+mymember(X, [L|_]) :- mymember(X, L).
+mymember(X,[_|T]) :- mymember(X, T).
+
+randomsort(L,S):-perm(L,S), is_sort(S). 
+is_sort(L):-iss(0,L). 
+iss(_,[]). 
+iss(N,[M|L]):-N =< M,iss(M,L). 
+
+perm([],[]). 
+perm(L,[H|T]):-append(V,[H|U], L), append(V,U,W), perm(W,T).
+
+removeEl(_, [],[]).
+removeEl(X, [H|R], [H|N]) :- X \= H, removeEl(X, R, N).
+removeEl(X, [H|R], N) :- X = H, removeEl(X,R,N).
