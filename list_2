@@ -27,3 +27,9 @@ perm(L,[H|T]):-append(V,[H|U], L), append(V,U,W), perm(W,T).
 removeEl(_, [],[]).
 removeEl(X, [H|R], [H|N]) :- X \= H, removeEl(X, R, N).
 removeEl(X, [H|R], N) :- X = H, removeEl(X,R,N).
+
+notin(_,[]).
+notin(A,[B|C]) :- A\=B, notin(A,C).
+
+equals([], []).
+equals([X|T], L) :- removeEl(X, L, N), equals(T, N).
