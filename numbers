@@ -1,0 +1,22 @@
+% Generates integers 
+int(0).
+int(N) :- int(N1), N is N1 + 1.
+% ?- int(X) --> X = 1, X = 2...
+
+% Generates even numbers
+even(0).
+even(N) :- even(N1), N is N1 + 2.
+
+even1(N) :- int(N), 0 =:= N mod 2.
+
+% ?- even(X); --> X = 0, X = 2, X = 4..
+
+% Generates the factorial of a number
+fact(0,1).
+fact(X,Y) :- X > 0, T is X - 1, fact(T,Z), Y is X*Z.
+% ?- fact(5, X) --> X = 120.
+
+% Generates all numbers in interval [X,Y]
+between(X,Y,X) :- X <= Y.
+between(X,Y,Z) :- X < Y, X1 is X + 1, between(X1, Y, Z).
+% ?- between(5, 15, X) --> X = 5, X = 6..
