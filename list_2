@@ -33,3 +33,58 @@ notin(A,[B|C]) :- A\=B, notin(A,C).
 
 equals([], []).
 equals([X|T], L) :- removeEl(X, L, N), equals(T, N).
+
+last(X, [X]).
+last(X, [_|T]) :- last(X, T).
+
+getNEl(X, 0, [X|_]).
+getNEl(X, N, [_|T]) :- N1 is N - 1, getNEl(X, N1, T).
+
+removeX(X, [X|T], T).
+removeX(X, [H|T], [H|L]) :- removeX(X, T, L). 
+
+insertX(X, 0, L, [X|L]).
+insertX(X, N, [H|T], [H|L]) :- N1 is N - 1, insertX(X, N1, T, L).
+
+split3([],[]).
+split3(L, [A|T]) :- myappend(A, B, L), (A \= []), split3(B, T).
+
+splitLWithNEls(L, N, R) :- split3(L, R), len(R, N).
+split_at(N, List, [H|[T]]) :- append(H, T, List), length(H, N).
+
+splitN(0,L,L).
+splitN(N, L, SL) :- N > 0, N1 is N - 1, splitN(N1, L, X), split3(X, SL).
+
+int(0).
+int(X) :- int(N), X is N + 1.
+
+mybetween(A,B,A) :- A =< B.
+mybetween(A,B,N) :- A < B, N1 is A + 1, mybetween(N1,B,N).
+
+isPrime(X) :- primeHelper(X, 2).
+
+genList(_,_,0,Agg,Agg).
+genList(A,B,N,Agg,R) :- N > 0, mymember(X,[A,B]), N1 is N - 1, myappend(Agg,X,Agg1),
+                              genList(A,B,N1,Agg1,R).
+
+primeHelper(X, X).
+primeHelper(X, N) :- N < X, X mod N =\= 0, N1 is N + 1, primeHelper(X, N1).
+
+genKS(1,Sum,[Sum]).
+genKS(Len,Sum,[N|X]) :- Len > 1, NewLen is Len - 1, mybetween(0,Sum,N), NewSum is Sum - N,
+                          genList(NewLen,NewSum,X).
+
+genArithmeticProgression(_,0,_,[]).
+genArithmeticProgression(Current,Len,D,[Current|R]) :- Len > 0, NewLen is Len - 1, NewCurrent is Current + D, genArithmeticProgression(NewCurrent,NewLen,D,R).
+
+q1([]).
+q1(X) :- int(N), genKS(3,N,[Start,Len,D]), Len > 0, D > 0,
+                  genArithmeticProgression(Start,Len,D,X), not((member(E,X), isPrime(E))).
+
+myreverse([], []).
+myreverse([H|T], L) :- myreverse(T, R), myappend(R, [H], L).
+
+
+my_reverse([],Agg,Agg).
+my_reverse([H|T],Agg,R) :- my_reverse(T,[H|Agg],R).
+my_reverse(L,RL) :- my_reverse(L,[],RL).
