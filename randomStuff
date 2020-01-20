@@ -1,0 +1,92 @@
+myreverse([], L, L).
+myreverse([H|T], L, R) :- myreverse(T, [H|L], R).
+myreverse(L, R) :- myreverse(L, [], R).
+
+p(_,[],0).
+p(X,[H|T], N) :- (p(X, T, N1), N is N1 + 1, 0 is mod(H, X)); p(X,T,N).
+
+p1(_, [], 0).
+p1(X, [H|T], N) :- H =< X, p1(X, T, N1), N is N1 + H.
+p1(X, [H|T], N) :- H > X, p1(X, T, N).
+
+dividor(X,Y) :- Y mod X =:= 0.
+notDev(X,Y) :- Y mod X =\= 0.
+
+p3(X,_,X,0).
+p3(X,Y,Counter,Num) :- dividor(Counter,X), notDev(Counter,Y), C is Counter + 1, p3(X,Y,C,N), Num is N + 1.
+p3(X,Y,Counter,Num) :- C is Counter + 1, p3(X,Y,C,Num).
+
+p4(X,_,P,0) :- X < P.
+p4(X,Y,P,N) :- P =< X, mybetween(P,X,D), dividor(D,X), notDev(D,Y), D1 is D + 1, p4(X,Y,D1,N1), N is N1 + 1.
+
+len([],0).
+len([_|T], N) :- len(T, N1), N is N1 + 1.
+
+ret1(1).
+
+int(1).
+int(X) :- int(X1), X is X1 + 1.
+
+mybetween(A, B, A) :- A =< B.
+mybetween(A, B, X) :- A < B, A1 is A + 1, mybetween(A1, B, X).
+
+
+/*
+ *I.1 Да се дефинират на пролог едноместни предикати p1, p2, p3 и p4.
+ * такива че даден списък X:
+ * (1) p1 разпознава дали празният списък е елемент на X,
+ * (2) p2 разпознава дали X съдържа елементи Y и Z, такива че не
+ * всички елементи на Y са елементи на Z,
+ * (3) p3 разпознава дали X съдържа елемент Y, който съдържа всички
+ * елемeнти на всички елементи на X,
+ * (4) p4 разпознава дали за всеки елемент Y на X съществува такъв
+ * елемент Z на X, че не всички елементи на Z са елементи на Y.
+*/
+
+mymember(X, [X|_]).
+mymember(X, [H|_]) :- mymember(X, H).
+mymember(X, [_|T]) :- mymember(X,T).
+
+p1(X) :- mymember([], X).
+
+isSubList(XS,XSS) :- not((mymember(X, XS), not((mymember(X,XSS))))).
+
+p2(X) :- isSubList(X,X).
+
+
+mysubset2([],_).
+mysubset2([H|T],L2) :- mymember(H,L2), mysubset2(T,L2).
+
+sublist1([], _, []).
+sublist1(_, [], []).
+sublist1([H|XS], [H|XSS], [H|R]) :- sublist1(XS, XSS, R).
+sublist1([H|XS], [X|XSS], R) :- H \= X, sublist1(XS, XSS, R).
+
+myappend([], L, L).
+myappend([H|T], L, [H|R]) :- myappend(T, L, R).
+
+removeDuplicates([H|L], [H|R]) :- mymember(H, L), removeDuplicates(L, R).
+removeDuplicates([], []).
+removeDuplicates([_|T], R) :- removeDuplicates(T,R).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
