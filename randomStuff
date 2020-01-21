@@ -19,10 +19,30 @@ p3(X,Y,Counter,Num) :- C is Counter + 1, p3(X,Y,C,Num).
 p4(X,_,P,0) :- X < P.
 p4(X,Y,P,N) :- P =< X, mybetween(P,X,D), dividor(D,X), notDev(D,Y), D1 is D + 1, p4(X,Y,D1,N1), N is N1 + 1.
 
+p5(X, Y, N) :- range(1, X, LX), notCommonDivs(X, Y, LX, R), len(R, N).
+
+notCommonDivs(_,_,[], []).
+notCommonDivs(X, Y, [H|T], [H|R]) :- notCommonDivs(X,Y,T,R), dividor(H,X), notDev(H,Y).
+notCommonDivs(X, Y, [_|T], R) :- notCommonDivs(X, Y, T, R).
+
+getDiff([], _, []).
+getDiff([H|T], S, [H|R]) :- not(mymember(H, S)), getDiff(T,S,R).
+getDiff([H|T], S, R) :- mymember(H, S), getDiff(T,S,R).
+    
+getDels(X, R) :- getDels(X, 1, R).
+    
+getDels(X, D, []) :- D > X.
+getDels(X, D, [D|R]) :- D1 is D + 1, D =< X, dividor(D,X), getDels(X, D1, R). 
+getDels(X, D, R) :- D1 is D + 1, D =< X, notDev(D, X), getDels(X,D1,R).
+
 len([],0).
 len([_|T], N) :- len(T, N1), N is N1 + 1.
 
-ret1(1).
+p6(X, Y, N) :- getDels(X, XD), getDels(Y, YD), getDiff(XD, YD, R), len(R, N).
+
+
+
+
 
 int(1).
 int(X) :- int(X1), X is X1 + 1.
@@ -51,8 +71,20 @@ p1(X) :- mymember([], X).
 
 isSubList(XS,XSS) :- not((mymember(X, XS), not((mymember(X,XSS))))).
 
-p2(X) :- isSubList(X,X).
+p2(X) :- mymember(Y,X), mymember(Z, X), not(isSubList(Y,Z)).
 
+p3(X) :- mymember(Y,X), containsAll(X, Y).
+
+isList([]).
+isList([_|_]).
+
+elementsOf(X,[X]) :- not(isList(X)).
+elementsOf(X,X) :- isList(X).
+
+elementsOfelementsOf([],[]).
+elementsOfelementsOf([H|T],L) :- elementsOf(H,E), elementsOfelementsOf(T,E2), myappend(E,E2,L).
+
+containsAll(X, Y) :- not((mymember(Z, X), not((isSubList(Z, Y))))).
 
 mysubset2([],_).
 mysubset2([H|T],L2) :- mymember(H,L2), mysubset2(T,L2).
@@ -65,25 +97,66 @@ sublist1([H|XS], [X|XSS], R) :- H \= X, sublist1(XS, XSS, R).
 myappend([], L, L).
 myappend([H|T], L, [H|R]) :- myappend(T, L, R).
 
-removeDuplicates([H|L], [H|R]) :- mymember(H, L), removeDuplicates(L, R).
+removeDuplicates([H|L], [H|R]) :- removeDuplicates(L, R), not(mymember(H, R)).
 removeDuplicates([], []).
-removeDuplicates([_|T], R) :- removeDuplicates(T,R).
+removeDuplicates([H|T], R) :- removeDuplicates(T,R), mymember(H, R).
 
 
 
+unique([],[]).
+unique([H|T],[H|UL]) :- unique(T,UL), not(mymember(H,UL)).
+unique([H|T],UL) :- unique(T,UL), mymember(H,UL). 
+
+
+/*
+ * I.2 Да се дефинират на пролог едноместни предикати q1, q2, q3 и q4.
+ * такива че даден списък X:
+ * (1) q1 разпознава дали празният списък е елемент на X,
+ * (2) q2 разпознава дали X съдържа елементи Y и Z, които нямат общи
+ * елементи,
+ * (3) q3 разпознава дали X съдържа елемент Y, чиито елементи са
+ * еленти на всички елемeнти на X,
+ * (4) q4 разпознава дали за всеки елемент Y на X съществува такъв
+ * елемент Z на X, че Y и Z нямат общи елемeнти.
+*/
+
+hasNoCommonElements(Y, Z) :- not((mymember(X, Y), mymember(X, Z))). 
+
+q2(X) :- mymember(Y, X), mymember(Z,X), hasNoCommonElements(Y,Z).
+
+q3(X) :- mymember(Y,X), not((mymember(Z,Y), mymember(P,X), mymember(Z,P))).
 
 
 
+subsequence([], []). 
+subsequence([H|T], [H|R]) :- subsequence(T, R).
+subsequence([_|T], R) :- subsequence(T, R).
 
+insert(X, L, R) :- myappend(A, B, L), myappend(A, [X|B], R). 
 
+perm([],[]).
+perm([H|T], L) :- perm(T, PT), insert(H, PT, L).
 
+pair(X, Y) :- int(N), mybetween(0,N,X), Y is N - X.
 
+anagrams(L) :-
+not(( member(X, L),
+          member(Y, L),
+not(perm(X, Y)) )).
 
+sameE(L, R) :- not((mymember(X, L), not((mymember(Y, R), X \= Y)))).
 
+p11(L) :- member(Y, L), member(X, Y), not((member(Z, L), not((member(X, Z))))).
 
+range(A, B, []) :- A > B.
+range(A, B, [A|R]) :- A1 is A + 1, A =< B, range(A1, B, R).
 
-
-
+genks(1, S, [S]).
+genks(K, S, [XI|R]) :- K>1,
+    K1 is K - 1,
+    mybetween(0, S, XI),
+    S1 is S - XI,
+    genks(K1,S1,R).
 
 
 
