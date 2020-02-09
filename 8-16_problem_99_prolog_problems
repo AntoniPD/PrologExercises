@@ -29,7 +29,7 @@ compress([H|T], L) :- my_member(H, T), compress(T, L).
 */
 
 my_append([], L, L).
-my_append([H|T], L, [H|R]) :- my_append(T, L, [], R).
+my_append([H|T], L, [H|R]) :- my_append(T, L, R).
 
 my_reverse(L, R) :- my_reverse_helper(L, [], R).
 
