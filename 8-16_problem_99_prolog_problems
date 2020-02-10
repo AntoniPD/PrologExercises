@@ -81,3 +81,19 @@ encode_modified_helper([H], N, [[N,H]]).
 encode_modified_helper([H,H|T], N, R) :- N1 is N + 1, encode_modified_helper([H|T], N1, R).
 encode_modified_helper([H, M|T], N, [[N,H]|R]) :- N \= 1, M \= H, encode_modified_helper([M|T], 1, R).
 encode_modified_helper([H, M|T], 1, [H|R]) :- M \= H, encode_modified_helper([M|T], 1, R).
+
+/*
+  P12 (**) Decode a run-length encoded list.
+  Given a run-length code list generated as specified in problem P11. Construct its uncompressed version.
+*/
+is_list([_|_]). 
+
+my_append(_, L,L).
+my_append([H|T], L, R) :- my_append(T, [H|L], R). 
+
+decode_helper([], []).
+decode_helper([[N,H]|T], R) :- helper(H, N, L), my_append(L, [], R), decode_helper(T, R).
+decode_helper([H|T], R) :- not(is_list(H)), my_append(H, [], R), decode_helper(T, R).
+
+helper(_, 0, []).
+helper(H, N, [H|L]) :- N > 0, N1 is N - 1, helper(H, N1, L).
