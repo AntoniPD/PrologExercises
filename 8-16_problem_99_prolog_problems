@@ -86,14 +86,28 @@ encode_modified_helper([H, M|T], 1, [H|R]) :- M \= H, encode_modified_helper([M|
   P12 (**) Decode a run-length encoded list.
   Given a run-length code list generated as specified in problem P11. Construct its uncompressed version.
 */
+
+decode(L, R) :- decode_helper(L, R1), my_flatten(R1, R).
+
 is_list([_|_]). 
 
-my_append(_, L,L).
+my_append([], L,L).
 my_append([H|T], L, R) :- my_append(T, [H|L], R). 
 
-decode_helper([], []).
-decode_helper([[N,H]|T], R) :- helper(H, N, L), my_append(L, [], R), decode_helper(T, R).
-decode_helper([H|T], R) :- not(is_list(H)), my_append(H, [], R), decode_helper(T, R).
+my_reverse(L, R) :- my_reverse_helper(L, [], R).
 
-helper(_, 0, []).
-helper(H, N, [H|L]) :- N > 0, N1 is N - 1, helper(H, N1, L).
+my_reverse_helper([], L, L).
+my_reverse_helper([H|T], L, R) :- my_reverse_helper(T, [H|L], R).
+
+my_flatten(L, R) :- my_flatten(L, [], R1), my_reverse(R1, R).
+
+my_flatten([], L, L).
+my_flatten([H|T], Agg, R) :- is_list(H), my_append(H, Agg, L), my_flatten(T, L, R).
+my_flatten([H|T], Agg, R) :- not(is_list(H)), my_flatten(T, [H|Agg], R).
+
+make_list(_, 0, []).
+make_list(H, N, [H|L]) :- N > 0, N1 is N - 1, make_list(H, N1, L).
+
+decode_helper([], []).
+decode_helper([[N,H]|T], [L|R]) :- make_list(H, N, L), decode_helper(T, R).
+decode_helper([H|T], [H|R]) :- not(is_list(H)), decode_helper(T, R).
