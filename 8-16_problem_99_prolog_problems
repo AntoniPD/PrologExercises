@@ -1,5 +1,5 @@
 /* 
-  P08 (**) Eliminate consecutive duplicates of list elements.
+ P08 (**) Eliminate consecutive duplicates of list elements.
   If a list contains repeated elements they should be replaced with a single copy of the element. The order of the elements should not be changed.
 
   Example:
@@ -20,7 +20,7 @@ compress([H|T], [H|L]) :- not(my_member(H,T)), compress(T, L).
 compress([H|T], L) :- my_member(H, T), compress(T, L).
 
 /*
-  P09 (**) Pack consecutive duplicates of list elements into sublists.
+ P09 (**) Pack consecutive duplicates of list elements into sublists.
   If a list contains repeated elements they should be placed in separate sublists.
 
   Example:
@@ -51,7 +51,7 @@ pack_helper([H|T], N, R, K) :- not(is_empty(T)), get_first_el(X, T), H = X, N1 i
 pack_helper([H|T], N, R, K) :- not(is_empty(T)), get_first_el(X, T), H \= X, create_list_of_N_el(H, N, L), pack_helper(T, 1, [L|R], K).
 
 /* 
-  P10 (*) Run-length encoding of a list.
+ P10 (*) Run-length encoding of a list.
   Use the result of problem P09 to implement the so-called run-length encoding data compression method. Consecutive duplicates of elements are encoded as terms [N,E] where N is the number of duplicates of the element E.
 
   Example:
@@ -66,7 +66,7 @@ encode_helper([H,H|T], N, R) :- N1 is N + 1, encode_helper([H|T], N1, R).
 encode_helper([H, M|T], N, [[N,H]|R]) :- M \= H, encode_helper([M|T], 1, R).
 
 /* 
-  P11 (*) Modified run-length encoding.
+ P11 (*) Modified run-length encoding.
   Modify the result of problem P10 in such a way that if an element has no duplicates it is simply copied into the result list. Only elements with duplicates are transferred as [N,E] terms.
 
   Example:
@@ -83,7 +83,7 @@ encode_modified_helper([H, M|T], N, [[N,H]|R]) :- N \= 1, M \= H, encode_modifie
 encode_modified_helper([H, M|T], 1, [H|R]) :- M \= H, encode_modified_helper([M|T], 1, R).
 
 /*
-  P12 (**) Decode a run-length encoded list.
+ P12 (**) Decode a run-length encoded list.
   Given a run-length code list generated as specified in problem P11. Construct its uncompressed version.
 */
 
@@ -114,7 +114,7 @@ decode_helper([H|T], [H|R]) :- not(is_list(H)), decode_helper(T, R).
 
 
 /*
-   P13 (**) Run-length encoding of a list (direct solution).
+ P13 (**) Run-length encoding of a list (direct solution).
   Implement the so-called run-length encoding data compression method
   directly. I.e. don't explicitly create the sublists containing the
   duplicates, as in problem P09, but only count them. As in problem P11,
