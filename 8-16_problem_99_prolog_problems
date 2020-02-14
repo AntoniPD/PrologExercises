@@ -111,3 +111,30 @@ make_list(H, N, [H|L]) :- N > 0, N1 is N - 1, make_list(H, N1, L).
 decode_helper([], []).
 decode_helper([[N,H]|T], [L|R]) :- make_list(H, N, L), decode_helper(T, R).
 decode_helper([H|T], [H|R]) :- not(is_list(H)), decode_helper(T, R).
+
+
+/*
+   P13 (**) Run-length encoding of a list (direct solution).
+  Implement the so-called run-length encoding data compression method
+  directly. I.e. don't explicitly create the sublists containing the
+  duplicates, as in problem P09, but only count them. As in problem P11,
+  simplify the result list by replacing the singleton terms [1,X] by X.
+
+  Example:
+  ?- encode_direct([a,a,a,a,b,c,c,a,a,d,e,e,e,e],X).
+  X = [[4,a],b,[2,c],[2,a],d,[4,e]]
+*/
+
+% Same as the solution in P11.
+
+/*
+ P14 (*) Duplicate the elements of a list.
+  Example:
+  ?- dupli([a,b,c,c,d],X).
+  X = [a,a,b,b,c,c,c,c,d,d]
+*/
+
+dupli([], []).
+dupli([H|T], [H,H|L]) :- dupli(T, L).
+
+
