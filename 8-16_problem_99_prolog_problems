@@ -152,3 +152,16 @@ dupli(L, N, R) :- dupli_helper(L, N, N, R).
 dupli_helper([], _, _, []).
 dupli_helper([H|T], N, M, [H|R]) :- M > 0, M1 is M - 1, dupli_helper([H|T], N, M1, R).
 dupli_helper([_|T], N, 0, R) :- dupli_helper(T, N, N, R).
+
+/*
+ P16 (**) Drop every N'th element from a list.
+  Example:
+  ?- drop([a,b,c,d,e,f,g,h,i,k],3,X).
+  X = [a,b,d,e,g,h,k]
+*/
+
+drop(L, N, R) :- drop_helper(L, N, N, R).
+
+drop_helper([], _, _, []).
+drop_helper([_|T], N, 1, L) :- drop_helper(T, N, N, L).
+drop_helper([H|T], N, M, [H|L]) :- M > 1, M1 is M - 1, drop_helper(T, N, M1, L).
