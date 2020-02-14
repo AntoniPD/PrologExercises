@@ -137,4 +137,18 @@ decode_helper([H|T], [H|R]) :- not(is_list(H)), decode_helper(T, R).
 dupli([], []).
 dupli([H|T], [H,H|L]) :- dupli(T, L).
 
+/*
+ P15 (**) Duplicate the elements of a list a given number of times.
+  Example:
+  ?- dupli([a,b,c],3,X).
+  X = [a,a,a,b,b,b,c,c,c]
 
+  What are the results of the goal:
+  ?- dupli(X,3,Y).
+*/
+
+dupli(L, N, R) :- dupli_helper(L, N, N, R).
+
+dupli_helper([], _, _, []).
+dupli_helper([H|T], N, M, [H|R]) :- M > 0, M1 is M - 1, dupli_helper([H|T], N, M1, R).
+dupli_helper([_|T], N, 0, R) :- dupli_helper(T, N, N, R).
