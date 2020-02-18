@@ -29,3 +29,19 @@ slice_helper([_|T], N, M, N1, M1, R) :- N > N1, N2 is N1 + 1, M2 is M1 + 1, slic
 slice_helper([H|T], N, M, N, M1, [H|R]) :- M > M1, M2 is M1 + 1, slice_helper(T, N, M, N, M2, R).
 slice_helper([_|T], N, M, N, M, R) :- slice_helper(T, N, M, N, M, R).
 
+
+/*
+ P19 (**) Rotate a list N places to the left.
+  Examples:
+  ?- rotate([a,b,c,d,e,f,g,h],3,X).
+  X = [d,e,f,g,h,a,b,c]
+
+  ?- rotate([a,b,c,d,e,f,g,h],-2,X).
+  X = [g,h,a,b,c,d,e,f]
+*/
+
+rotate(L, N, R) :- rotate_helper(L, N, [], R).
+
+rotate_helper(T, 0, L, R) :- reverse(L, L1), append(T, L1, R).
+rotate_helper([H|T], N, L, R) :- N > 0, N1 is N - 1, rotate_helper(T, N1, [H|L], R).
+rotate_helper(L, N, L1, R) :- N < 0, length(L, X), N1 is X + N, rotate_helper(L, N1, L1,R). 
