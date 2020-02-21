@@ -45,3 +45,16 @@ rotate(L, N, R) :- rotate_helper(L, N, [], R).
 rotate_helper(T, 0, L, R) :- reverse(L, L1), append(T, L1, R).
 rotate_helper([H|T], N, L, R) :- N > 0, N1 is N - 1, rotate_helper(T, N1, [H|L], R).
 rotate_helper(L, N, L1, R) :- N < 0, length(L, X), N1 is X + N, rotate_helper(L, N1, L1,R). 
+
+/*
+ P20 (*) Remove the K'th element from a list.
+  Example:
+  ?- remove_at(X,[a,b,c,d],2,R).
+  X = b
+  R = [a,c,d]
+*/
+
+
+remove_at(H, [H|T], 1, T).
+remove_at(X, [H|T], N, [H|R]) :- 
+  N > 1, N1 is N - 1, remove_at(X, T, N1, R).
