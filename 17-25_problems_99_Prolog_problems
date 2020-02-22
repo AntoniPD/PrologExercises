@@ -70,3 +70,13 @@ remove_at(X, [H|T], N, [H|R]) :-
 insert_at(X, T, 1, [X|T]).
 insert_at(X, [H|T], N, [H|L]) :- 
     N > 1, N1 is N - 1, insert_at(X, T, N1, L).
+    
+/*
+ P22 (*) Create a list containing all integers within a given range.
+Example:
+?- range(4,9,L).
+L = [4,5,6,7,8,9]
+*/
+
+my_range(B,B,[B]).
+my_range(A, B, [A|L]) :- A < B, A1 is A + 1, my_range(A1, B, L).
