@@ -1,0 +1,32 @@
+/*
+ P27 (**) Group the elements of a set into disjoint subsets.
+a) In how many ways can a group of 9 people work in 3 disjoint subgroups of 2, 3 and 4 persons? Write a predicate that generates all the possibilities via backtracking.
+
+Example:
+?- group3([aldo,beat,carla,david,evi,flip,gary,hugo,ida],G1,G2,G3).
+G1 = [aldo,beat], G2 = [carla,david,evi], G3 = [flip,gary,hugo,ida]
+...
+
+*/
+
+comb(0,_,[]).
+
+comb(N,[X|T],[X|Comb]) :-
+    N>0,
+    N1 is N-1,
+    comb(N1,T,Comb).
+
+comb(N,[_|T],Comb) :-
+    N>0,
+    comb(N,T,Comb).
+
+my_member(H, [H|_]).
+my_member(X, [_|T]) :- my_member(X, T).
+
+difference([],_,[]). 
+    difference([X|R],Y,Z) :- my_member(X,Y), difference(R,Y,Z). 
+    difference([X|R],Y,[X|Z]) :- not(my_member(X,Y)), difference(R,Y,Z). 
+
+
+group3(L, G1, G2, G3) :- comb(2, L, G1), difference(L, G1, R), comb(3, R, G2), difference(R, G2, RL), comb(4, RL, G3).
+
