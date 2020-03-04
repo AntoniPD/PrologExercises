@@ -30,3 +30,24 @@ difference([],_,[]).
 
 group3(L, G1, G2, G3) :- comb(2, L, G1), difference(L, G1, R), comb(3, R, G2), difference(R, G2, RL), comb(4, RL, G3).
 
+
+/*
+b) Generalize the above predicate in a way that we can specify a list of group sizes and the predicate will return a list of groups.
+
+Example:
+?- group([aldo,beat,carla,david,evi,flip,gary,hugo,ida],[2,2,5],Gs).
+Gs = [[aldo,beat],[carla,david],[evi,flip,gary,hugo,ida]]
+...
+
+Note that we do not want permutations of the group members; i.e. [[aldo,beat],...] is the same solution as [[beat,aldo],...]. However, we make a difference between [[aldo,beat],[carla,david],...] and [[carla,david],[aldo,beat],...].
+
+You may find more about this combinatorial problem in a good book on discrete mathematics under the term "multinomial coefficients".
+*/
+
+
+get_first_N_elements(0, _, []).
+get_first_N_elements(N, [H|T], [H|R]) :- N1 is N - 1, get_first_N_elements(N1, T, R).
+
+group(_, [], []).
+group(L, [H|XS], [R1|R]) :- get_first_N_elements(H, L, R1), difference(L, R1, RS), group(RS, XS, R).
+
