@@ -1,0 +1,183 @@
+memb(X,[X|_]).
+memb(X, [H|T]) :- X \= H, memb(X,T).
+
+appnd([],R,R).
+appnd([H|T], L, [H|R]) :- appnd(T, L, R).
+
+add1toeach([], []).
+add1toeach([H|T], [X|R]) :- X is H + 1, add1toeach(T, R).
+
+sublst([], _).
+sublst([X|XS], [X|XSS]) :- sublst(XS, XSS).
+sublst([X|XS], [_|XSS]) :- sublst([X|XS], XSS).
+
+remove1(_, [], []).
+remove1(X, [X|L], R) :- remove1(X, L, R).
+remove1(X, [H|L], [H|R]) :-  X \= H, remove1(X, L, R).
+
+
+
+insert1(X, [], [X]).
+insert1(X, [H|L], [H|R]) :- insert1(X, L, R).
+
+%insertInN(X, N, L, R)
+insertInN(X, 1, L, [X|L]).
+insertInN(X, N, [H|L], [H|R]) :- N1 is N - 1, insertInN(X, N1, L, R).
+
+remove(X, List, Result) :-
+    appnd(A, [X|B], List),
+    appnd(A, B, Result).
+
+
+reverse1(L, R) :- reverseHelper(L,[], R).
+
+reverseHelper([], L, L).
+reverseHelper([H|T], L, R) :- reverseHelper(T, [H|L], R).
+
+subsetGen([],[]).
+subsetGen(R, [_|T]):- subsetGen(R,T).
+subsetGen([H|R], [H|T]) :- subsetGen(R,T).
+
+a(0,0,1,1).
+a(Prev, N1, Curr, N):- N1 > 0, N2 is N1 - 1, N is N1 + 1,
+    a(PrevPrev, N2, Prev, N1),
+            Curr is 5 * Prev * Prev + 3 * PrevPrev * PrevPrev * PrevPrev.
+p(A):- not(( between(0, A, N), a(A, N, _, _) )).
+
+bb([],_).
+bb([H|S], L) :- bb(S,L), member(H,L).
+
+removeDuplicates([], []).
+removeDuplicates([H|T], L) :- removeDuplicates(T, L), member(H,L).
+removeDuplicates([H|T], [H|L]) :- removeDuplicates(T, L), not(member(H,L)).
+
+myMember(X, [X|_]).
+myMember(X, [H|_]) :- myMember(X, H).
+myMember(X, [H|T]) :- X \= H, myMember(X, T).
+
+inUnion(X, A, B) :- not(( not(myMember(X, A)), not(myMember(X, B)) )).
+
+isSubsetOf(A,B):-not((member(X,A), not(member(X,B)) )).
+
+inIntersection(X, A, B) :- not(( myMember(X,A), not(myMember(X,B)))),
+    not(( myMember(X,B), not(myMember(X,A)))),
+    not(( not(myMember(X, A)), not(myMember(X,B)))).
+
+inDifference(X, A, B) :- not(inIntersection(X, A, B)), not(not(myMember(X, A))), not(myMember(X, B)).
+
+areEqualSets(A,B) :- not(( myMember(X, A), not(myMember(X, B)))).
+
+isEmptyListContained(L) :- myMember([], L).
+
+hasNoCommonElements(X,Y) :- not((myMember(Z, X), myMember(Z, Y))). 
+
+q2(X) :- myMember(Y,X), myMember(Z,X), hasNoCommonElements(Y,Z).
+
+fiveIsElOf(X) :- fiveHelper(2, X).
+
+palindrome(L) :- reverse(L,L).
+
+%major(X,Y)
+
+myMemberForList(X, [X|_]).
+myMemberForList(X, [_|T]) :- myMemberForList(X, T), myMemberForList(X, T).
+
+major([],_).
+major([H|T], L) :- myMemberForList(H,L), major(T, L).
+major([H|_], L) :- not(myMemberForList(H, L)), major(H, []).
+
+hasAllElements(M, L) :- not(( myMemberForList(X, L), not(major(X, M)))).
+
+solution(L, M) :- 
+    myMemberForList(M, L), hasAllElements(M, L), append(_, [M|T], L),
+            not(( myMemberForList(X, L), myMemberForList(Y,T), not(major(Y,X)))).
+
+%major(X,Y) :- not(( myMember(A, X), not(myMember(A, Y)))).
+
+nat(zero).
+nat(s(X)) :- nat(X).
+
+natn(0).
+natn(X) :- natn(X1), X is X1 + 1.
+
+addn(0, Y, Y) :- nat(Y).
+addn(X, Y, Z) :- addn(X, Y, Z).
+
+add(zero, Y, Y) :- nat(Y).
+add(s(X), Y, s(Z)) :- add(X, Y, Z).
+
+ins(X,L,R) :- append(P,S,L), append(P,[X|S],R).
+
+permutate([],[]).
+permutate(P,[H|T]) :- permutate(Q,T), ins(H,Q,P).
+
+join([],[]).
+join([L|LS], R) :- join(LS, T), append(L,T,R).
+
+partition([],[]).
+partition([ [H] |P], [H|T]) :- partition(P,T).
+partition([ [H | HP] | TP], [H|T]) :- partition([HP|TP], T).
+
+between(A,A,B) :- A =< B.
+between(X, A, B) :- A < B, A1 is A + 1, between(X, A1, B).
+
+genKS(1, S, [S]) :- S >= 0.
+genKS(K, S, [H|T]) :- K > 1, N is K - 1, between(H, 0, S), M is S - H, genKS(N, M, T). 
+
+isPrime(X) :- not(X=<1),
+    P is X div 2,
+    not(( between(Y, 2, P), not(X mod Y =\= 0))).
+
+genPrimes(X) :- natn(X), isPrime(X). 
+
+listOfKPrimes(K, K, _, []).
+listOfKPrimes(K, C, Curr, [X|T]) :- between(X, Curr, C*10), isPrime(X), C1 is C + 1, Curr1 is Curr + 1, listOfKPrimes(K, C1, Curr1, T).
+listOfKPrimes(K, C, Curr, L) :- between(X, Curr, K), not(isPrime(X)), listOfKPrimes(K, C, Curr, L). 
+
+
+primeList(0, []).
+primeList(N, [N|L]) :-
+    % If we're not at the base case yet
+    N > 0,
+    % If N is a prime
+    isPrime(N),
+    NewN is N - 1,
+    % Let's recurse and unifie N as the head of our result list in the head
+    % of the predicate
+    primeList(NewN, L).
+
+primeList(N, L) :-
+    % Same as above but no further unification in the head this time.
+    N > 0,
+    % Because N isn't a prime
+    \+ isPrime(N),
+    NewN is N - 1,
+    primeList(NewN, L).
+
+range(A, B, []) :- A > B.
+range(A, B, [X|T]) :- A =< B, between(X, A, B), A1 is A + 1,range(A1, B, T).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
